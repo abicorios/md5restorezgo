@@ -97,7 +97,12 @@ func myfiles(ipath string) []string {
 func isEmpty(s string) bool {
 	return len(myfiles(s)) == 0
 }
-
+func restorez(myfrom,myto string) {
+	p("recursive going folder tree function")
+}
 func main() {
 	p("start development")
+	if len(os.Args)!=5 {
+	p("md5restorezgo [restorez \"C:\\dir\\from\" \"C:\\dir\\to\" \"C:\\path\\to\\folderTree.csv\"]")
+}
 }
