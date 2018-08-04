@@ -163,6 +163,7 @@ func main() {
 	}
 	var myfrom string = os.Args[2]
 	myto = os.Args[3]
+	os.Mkdir(myto+"\\other",0777)
 	var mycsv string = os.Args[4]
 	var csvContent string
 	csvBytes, _ := ioutil.ReadFile(mycsv)
