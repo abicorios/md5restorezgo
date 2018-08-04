@@ -16,6 +16,8 @@ import (
 	//"path/filepath"
 )
 
+var myto string
+
 type Path struct {
 	Path, FileName string
 }
@@ -103,6 +105,25 @@ func myfiles(ipath string) []string {
 func isEmpty(s string) bool {
 	return len(myfiles(s)) == 0
 }
+func mycopy(ffrom, fto string) {
+	from, err := os.Open(ffrom)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer from.Close()
+	mydir := drop(fto, "\\")
+	os.Mkdir(mydir, 0777)
+	to, err := os.OpenFile(fto, os.O_RDWR|os.O_CREATE, 0777)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer to.Close()
+
+	_, err = io.Copy(to, from)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 func restorez(ipath string) {
 	for _, i := range myfiles(ipath) {
 		thisthing := ipath + "\\" + i
@@ -112,6 +133,20 @@ func restorez(ipath string) {
 		case "file":
 			thism := mymd5(thisthing)
 			p(thism)
+			if csvItem, ok := myFiles[thism]; ok {
+				mycopy(thisthing, myto+"\\"+csvItem.Path+"\\"+csvItem.FileName)
+			} else {
+				mycopy(thisthing, myto+"\\other")
+			}
+		case "dir":
+			restorez(thisthing)
+		case "archive":
+			newpath := drop(thisthing, ".")
+			newpath = strings.Replace(newpath, os.Args[2], "", 1)
+			newpath = mybuffer + newpath
+			os.Mkdir(newpath, 0777)
+			myexe("7z", "x", thisthing, "-o"+newpath, "-aou")
+			restorez(newpath)
 		}
 	}
 	p("recursive going folder tree function")
@@ -122,9 +157,10 @@ func main() {
 	fmt.Println(command)
 	if len(os.Args) != len(command) {
 		p(strings.Join(command, " "))
+		os.Exit(0)
 	}
 	var myfrom string = os.Args[2]
-	var myto string = os.Args[3]
+	myto = os.Args[3]
 	var mycsv string = os.Args[4]
 	var csvContent string
 	csvBytes, _ := ioutil.ReadFile(mycsv)
@@ -138,9 +174,9 @@ func main() {
 	for _, i := range csvLines {
 		csvSubLines = strings.Split(i, ",")
 		if len(csvSubLines) == 3 {
-			if _,ok:=myFiles[csvSubLines[2]];!ok{
-			myFiles[csvSubLines[2]] = Path{csvSubLines[0], csvSubLines[1]}
-		}
+			if _, ok := myFiles[csvSubLines[2]]; !ok {
+				myFiles[csvSubLines[2]] = Path{csvSubLines[0], csvSubLines[1]}
+			}
 		}
 	}
 	fmt.Println(myFiles)
