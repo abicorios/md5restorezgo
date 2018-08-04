@@ -152,6 +152,8 @@ func restorez(ipath string) {
 	p("recursive going folder tree function")
 }
 func main() {
+	myrmtree(mybuffer)
+	os.Mkdir(mybuffer, 0777)
 	fmt.Println("len(os.Args)=", len(os.Args))
 	var command []string = []string{"md5restorezgo.exe", "restorez", "\"C:\\dir\\from\"", "\"C:\\dir\\to\"", "\"C:\\path\\to\\folderTree.csv\""}
 	fmt.Println(command)
