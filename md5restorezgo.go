@@ -16,6 +16,11 @@ import (
 	//"path/filepath"
 )
 
+type Path struct {
+	Path, FileName string
+}
+
+var myFiles map[string]Path
 var dir string
 var gmylog string
 var mybuffer = "C:\\Windows\\Temp\\md5utils"
@@ -98,7 +103,17 @@ func myfiles(ipath string) []string {
 func isEmpty(s string) bool {
 	return len(myfiles(s)) == 0
 }
-func restorez(myfrom, myto string) {
+func restorez(ipath string) {
+	for _, i := range myfiles(ipath) {
+		thisthing := ipath + "\\" + i
+		p(thisthing)
+		imytype := mytype(thisthing)
+		switch imytype {
+		case "file":
+			thism := mymd5(thisthing)
+			p(thism)
+		}
+	}
 	p("recursive going folder tree function")
 }
 func main() {
@@ -111,6 +126,25 @@ func main() {
 	var myfrom string = os.Args[2]
 	var myto string = os.Args[3]
 	var mycsv string = os.Args[4]
+	var csvContent string
+	csvBytes, _ := ioutil.ReadFile(mycsv)
+	csvContent = string(csvBytes)
+	p(csvContent)
+	var csvLines []string
+	csvLines = strings.Split(csvContent, "\n")
+	p(csvLines[1])
+	var csvSubLines []string
+	myFiles = make(map[string]Path)
+	for _, i := range csvLines {
+		csvSubLines = strings.Split(i, ",")
+		if len(csvSubLines) == 3 {
+			if _,ok:=myFiles[csvSubLines[2]];!ok{
+			myFiles[csvSubLines[2]] = Path{csvSubLines[0], csvSubLines[1]}
+		}
+		}
+	}
+	fmt.Println(myFiles)
 	p(mycsv)
-	restorez(myfrom, myto)
+	p(myto)
+	restorez(myfrom)
 }
