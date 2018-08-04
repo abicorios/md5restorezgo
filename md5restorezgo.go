@@ -15,6 +15,7 @@ import (
 	//"time"
 	//"path/filepath"
 )
+
 var dir string
 var gmylog string
 var mybuffer = "C:\\Windows\\Temp\\md5utils"
@@ -97,14 +98,19 @@ func myfiles(ipath string) []string {
 func isEmpty(s string) bool {
 	return len(myfiles(s)) == 0
 }
-func restorez(myfrom,myto string) {
+func restorez(myfrom, myto string) {
 	p("recursive going folder tree function")
 }
 func main() {
-	p("start development")
-	fmt.Println("len(os.Args)=",len(os.Args))
-	if len(os.Args)!=5 {
-	p("md5restorezgo [restorez \"C:\\dir\\from\" \"C:\\dir\\to\" \"C:\\path\\to\\folderTree.csv\"]")
-}
-restorez(os.Args[2],os.Args[3])
+	fmt.Println("len(os.Args)=", len(os.Args))
+	var command []string = []string{"md5restorezgo.exe", "restorez", "\"C:\\dir\\from\"", "\"C:\\dir\\to\"", "\"C:\\path\\to\\folderTree.csv\""}
+	fmt.Println(command)
+	if len(os.Args) != len(command) {
+		p(strings.Join(command, " "))
+	}
+	var myfrom string = os.Args[2]
+	var myto string = os.Args[3]
+	var mycsv string = os.Args[4]
+	p(mycsv)
+	restorez(myfrom, myto)
 }
