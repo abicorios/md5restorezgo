@@ -102,7 +102,9 @@ func restorez(myfrom,myto string) {
 }
 func main() {
 	p("start development")
+	fmt.Println("len(os.Args)=",len(os.Args))
 	if len(os.Args)!=5 {
 	p("md5restorezgo [restorez \"C:\\dir\\from\" \"C:\\dir\\to\" \"C:\\path\\to\\folderTree.csv\"]")
 }
+restorez(os.Args[2],os.Args[3])
 }
