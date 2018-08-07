@@ -132,11 +132,13 @@ func restorez(ipath string) {
 		switch imytype {
 		case "file":
 			thism := mymd5(thisthing)
-			p(thism)
 			if csvItem, ok := myFiles[thism]; ok {
 				mycopy(thisthing, myto+"\\"+csvItem.Path+"\\"+csvItem.FileName)
 			} else {
 				mycopy(thisthing, myto+"\\other")
+			}
+if inBuffer(thisthing) {
+				myrmtree(thisthing)
 			}
 		case "dir":
 			restorez(thisthing)
@@ -149,7 +151,6 @@ func restorez(ipath string) {
 			restorez(newpath)
 		}
 	}
-	p("recursive going folder tree function")
 }
 func main() {
 	myrmtree(mybuffer)
@@ -168,10 +169,8 @@ func main() {
 	var csvContent string
 	csvBytes, _ := ioutil.ReadFile(mycsv)
 	csvContent = string(csvBytes)
-	p(csvContent)
 	var csvLines []string
 	csvLines = strings.Split(csvContent, "\n")
-	p(csvLines[1])
 	var csvSubLines []string
 	myFiles = make(map[string]Path)
 	for _, i := range csvLines {
@@ -183,7 +182,5 @@ func main() {
 		}
 	}
 	fmt.Println(myFiles)
-	p(mycsv)
-	p(myto)
 	restorez(myfrom)
 }
